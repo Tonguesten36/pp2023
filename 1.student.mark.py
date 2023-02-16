@@ -84,7 +84,7 @@ def input_course(course_list):
                     for course in course_list:
                         name = course.get("name")
                         _id = course.get("id")
-                        if course_name == name | course_id == _id:
+                        if course_name == name or course_id == _id:
                             print("Course already exist!")
                             return
 
