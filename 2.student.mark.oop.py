@@ -13,11 +13,11 @@ class Object:
         return list
  
     # Get the name of the obj
-    def _get_name(self):
+    def get_name(self):
         return self._name
     
     # Get the id of the obj
-    def _get_id(self):
+    def get_id(self):
         return self._id
     
     # String representation of obj
@@ -30,13 +30,14 @@ class Student(Object):
         self.__student_dob = dob
 
     # Get the d.o.b of the student
-    def _get_dob(self):
+    def get_dob(self):
         return self.__student_dob
 
     # Compare between two students and return true if specific attributes are identical
     def __lt__(self, other_student):
         return self._id == other_student._id
 
+    # String representation of Student
     def __str__(self):
         return f"Name: {self._name}, ID: {self._id}, D.O.B: {self.__student_dob}"
     
@@ -51,16 +52,25 @@ class Course(Object):
         return (self._name == other_course._name) or (self._id == other_course._id)
 
 class StudentMark:
-    def __init__(self, student, course, mark):
-        self.__student_name = student
-        self.__course_name = course
+    def __init__(self, student_id, course_name, mark):
+        self.__student_id = student_id
+        self.__course_name = course_name
         self.__student_mark = mark
     
+    def get_course_name(self):
+        return self.__course_name 
+
+    def get_student_id(self):
+        return self.__student_id
+    
+    def get_student_mark(self):
+        return self.__student_mark
+
     def __str__(self):
-        return f"Student: {self.__student_name}, Course: {self.__course_name}, Mark: {self.__student_mark}"    
+        return f"Student ID: {self.__student_id}, Course: {self.__course_name}, Mark: {self.__student_mark}"    
          
 
-# Input a number of students in an class (done)
+# Input a number of students in an class
 def input_student(students_list):
     # Ask the user how many students would they like to add
     while True:
@@ -77,7 +87,7 @@ def input_student(students_list):
     for s in range(0, no_students, 1):
         while True:
             try:
-                print(f"---Student {s}. ")
+                print(f"---Student {s + 1}. ")
                 student_id = int(input("Student ID: "))
                 student_name = str(input("Name: "))
                 student_dob = str(input("D.O.B (DD/MM/YYYY): "))
@@ -85,32 +95,28 @@ def input_student(students_list):
                 if student_id <= 0 or student_name == "" or student_dob == "":
                     print("try again")
                 else:
-                    # Check if the student exist yet
-                    # In the first assignment, the program also check for name
-                    # However, I removed that option because I realized that two (or more) students
-                    # can have the same name, but not having the same ID
-                    for student in students_list:
-                        _id = student.get("id")
-                        if student_id == _id:
+                    # Check if the student had already existed yet
+                    for student_obj in students_list:
+                        if student_obj.get_id() == student_id:
                             print("Student already exist!")
                             return
-
+                    
+                    # Create a new Student object and append it to the students_list
                     new_student = Student(student_name, student_id, student_dob)
-
                     students_list.append(new_student)
                     break
             except:
                 print("Something went wrong, try again.")
 
-# List out all students in the class (Done)
+# List out all students in the class
 def list_student(students_list):
     print("---List of students in the class---")
     counter = 1
     for student_obj in students_list:
-        print(f"Student {counter}. Name: {student_obj._get_name()}, ID: {student_obj._get_id()}, D.O.B: {student_obj._get_dob()}")
+        print(f"Student {counter}. Name: {student_obj.get_name()}, ID: {student_obj.get_id()}, D.O.B: {student_obj.get_dob()}")
         counter = counter + 1
 
-# Input a number of courses (Done)
+# Input a number of courses
 def input_course(course_list):
     # Ask the user how many courses they would like to add
     while True:
@@ -127,65 +133,67 @@ def input_course(course_list):
     for c in range(0, no_courses, 1):
         while True:
             try:
-                print(f"---Course {c}. ")
+                print(f"---Course {c + 1}. ")
                 course_name = str(input("Course Name: "))
                 course_id = int(input("Course ID: "))
                 if course_id <= 0 or course_name == "":
                     print("try again")
                 else:
                     # Check if the course exist yet
-                    for course in course_list:
-                        name = course.get("name")
-                        _id = course.get("id")
-                        if course_name == name or course_id == _id:
+                    for course_obj in course_list:
+                        if course_obj.get_name() == course_name or course_obj.get_id() == course_id:
                             print("Course already exist!")
                             return
 
-                    new_course = Course(name, _id)
+                    new_course = Course(course_name, course_id)
                     course_list.append(new_course)
                     break
             except:
                 print("Something went wrong, try again.")
 
-# List out available courses (Done)
+# List out available courses
 def list_course(courses_list):
     counter = 1
     print("---List of courses available---")
-    for course_dict in courses_list:
-        if "name" and "id" in course_dict:
-            course_name = course_dict.get("name")
-            course_id = course_dict.get("id")
-
-            print(f"Course {counter}. Name: {course_name}, ID: {course_id}")
-            counter = counter + 1
+    for course_obj in courses_list:
+        print(f"Course {counter}. {course_obj.get_name()}, ID: {course_obj.get_id()}")
+        counter = counter + 1
 
 # Select a course, input marks for a student in that courses
 def input_mark(students_list, courses_list, marks_list):
-    student_name = input("Student's name: ")
+    student_id = int(input("Student's ID: "))
+
+    student_exist = False
+    course_exist = False
 
     # Check if the student exist 
     if len(students_list) == 0:
         print("Student does not exist!")
         return
     else:
-        for student_dict in students_list:
-            name = student_dict.get("name")
-            if student_name != name:
-                print("Student does not exist!")
-                return
-    
+        for student_obj in students_list:
+            if student_obj.get_id() == student_id:
+                student_exist = True
+
     course_name = input("Course's name: ")
 
     # Check if the course exist
     if len(courses_list) == 0:
         print("Course does not exist!")
         return
-    for course_dict in courses_list:
-        name = course_dict.get("name")
-        if course_name != name or len(courses_list) == 0:
-            print("Courses does not exist!")
-            return
-    
+    else:
+        for course_obj in courses_list:
+            if course_obj.get_name() == course_name:
+                course_exist = True
+
+    # If student or course does not exist, then the function stops
+    if student_exist == False:
+        print("Student does not exist!")
+        return
+    if course_exist == False:
+        print("Course does not exist!")
+        return
+
     # Ask the user the student's mark for that course
     student_mark = 0
     while True:
@@ -198,28 +206,22 @@ def input_mark(students_list, courses_list, marks_list):
         except:
             print("Must be a number!")
     
-    # The student mark will be a dictionary
-    student_mark_dict = {}
-    student_mark_dict.update({"student_name":student_name})
-    student_mark_dict.update({"course_name":course_name})
-    student_mark_dict.update({"student_mark":student_mark})
+    # The student mark will be an object
+    student_mark_obj = StudentMark(student_id, course_name, student_mark)
 
     # Add the mark's info into the list
-    marks_list.append(student_mark_dict)
+    marks_list.append(student_mark_obj)
 
 # List out all mark of a student
 def list_mark(marks_list):
-    search_target = input("Whose mark do you want to see?: ")
+    try:
+        search_target = int(input("Enter the student ID: "))
 
-    for mark_dict in marks_list:
-        if "student_name" and "course_name" and "student_mark" in mark_dict:
-            student_name = mark_dict.get("student_name")
-            course_name = mark_dict.get("course_name")
-            student_mark = mark_dict.get("student_mark")
-
-            # Display the mark of a specific student
-            if search_target == student_name:
-                print(f"Student: {student_name}, Course: {course_name}, Mark: {student_mark}")
+        for mark_obj in marks_list:
+            if mark_obj.get_student_id() == search_target:
+                print(f"Course: {mark_obj.get_course_name()}, Mark: {mark_obj.get_student_mark()}")
+    except:
+        print("Something went wrong")
 
 # Execute the code
 # This code will loop until terminated
@@ -230,44 +232,36 @@ if __name__ == "__main__":
     courses_list = []
     marks_list = []
 
-    # while True:
-    #     print("---Here are the things that you could do---")
-    #     print("1. Add new student(s)")
-    #     print("2. Add new course(s)")
-    #     print("3. Select a course and input mark for student")
-    #     print("4. List out all students")
-    #     print("5. List out all courses")
-    #     print("6. List out all students' mark for each courses")
-    #     print("7. Exit")
+    while True:
+        print("---Here are the things that you could do---")
+        print("1. Add new student(s)")
+        print("2. Add new course(s)")
+        print("3. Select a course and input mark for student")
+        print("4. List out all students")
+        print("5. List out all courses")
+        print("6. List out all students' mark for each courses")
+        print("7. Exit")
         
-    #     op = input("What do you want to do? (1-7): ")
+        op = input("What do you want to do? (1-7): ")
 
-    student = Student("Name", 1900, "10/06/2003")
-    # print(student._get_name())
-    # print(student._get_id())
-    # print(student)
-
-    course = Course("Meth", 2005)
-    # print(course._get_name())
-    # print(course._get_id())
-    # print(course)
+    
         # Use this code if you're using a Python version 3.10 or later
-        # match op:
-        #     case "1":
-        #         input_student(students_list)
-        #     case "2":
-        #         input_course(courses_list)
-        #     case "3":
-        #         input_mark(students_list, courses_list, marks_list)
-        #     case "4":
-        #         list_student(students_list)
-        #     case "5":
-        #         list_course(courses_list)
-        #     case "6":
-        #         list_mark(marks_list)
-        #     case "7":
-        #         exit()
-        #     case _:
-        #         print("Invalid input")
+        match op:
+            case "1":
+                input_student(students_list)
+            case "2":
+                input_course(courses_list)
+            case "3":
+                input_mark(students_list, courses_list, marks_list)
+            case "4":
+                list_student(students_list)
+            case "5":
+                list_course(courses_list)
+            case "6":
+                list_mark(marks_list)
+            case "7":
+                exit()
+            case _:
+                print("Invalid input")
 
-    print("\n")
+        print("\n")
