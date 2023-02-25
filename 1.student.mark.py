@@ -112,6 +112,9 @@ def list_course(courses_list):
 def input_mark(students_list, courses_list, marks_list):
     student_name = input("Student's name: ")
 
+    student_exist = False
+    course_exist = False
+
     # Check if the student exist 
     if len(students_list) == 0:
         print("Student does not exist!")
@@ -119,9 +122,8 @@ def input_mark(students_list, courses_list, marks_list):
     else:
         for student_dict in students_list:
             name = student_dict.get("name")
-            if student_name != name:
-                print("Student does not exist!")
-                return
+            if student_name == name:
+                student_exist = True
     
     course_name = input("Course's name: ")
 
@@ -129,12 +131,20 @@ def input_mark(students_list, courses_list, marks_list):
     if len(courses_list) == 0:
         print("Course does not exist!")
         return
-    for course_dict in courses_list:
-        name = course_dict.get("name")
-        if course_name != name or len(courses_list) == 0:
-            print("Courses does not exist!")
-            return
+    else:
+        for course_dict in courses_list:
+            name = course_dict.get("name")
+            if course_name == name:
+                course_exist = True
     
+    # If student or course does not exist, then the function stops
+    if student_exist == False:
+        print("Student does not exist!")
+        return
+    if course_exist == False:
+        print("Course does not exist!")
+        return
+        
     # Ask the user the student's mark for that course
     student_mark = 0
     while True:
