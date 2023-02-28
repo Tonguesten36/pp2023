@@ -13,11 +13,11 @@ class Object:
         return list
  
     # Get the name of the obj
-    def get_name(self):
+    def _get_name(self):
         return self._name
     
     # Get the id of the obj
-    def get_id(self):
+    def _get_id(self):
         return self._id
     
     # String representation of obj
@@ -30,7 +30,7 @@ class Student(Object):
         self.__student_dob = dob
 
     # Get the d.o.b of the student
-    def get_dob(self):
+    def _get_dob(self):
         return self.__student_dob
 
     # Compare between two students and return true if specific attributes are identical
@@ -57,13 +57,13 @@ class StudentMark:
         self.__course_name = course_name
         self.__student_mark = mark
     
-    def get_course_name(self):
+    def _get_course_name(self):
         return self.__course_name 
 
-    def get_student_id(self):
+    def _get_student_id(self):
         return self.__student_id
     
-    def get_student_mark(self):
+    def _get_student_mark(self):
         return self.__student_mark
 
     def __str__(self):
