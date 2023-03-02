@@ -1,3 +1,6 @@
+students_list = []
+courses_list = []
+marks_list = []
 
 # Input a number of students in an class (done)
 def input_student(students_list):
@@ -73,10 +76,12 @@ def input_course(course_list):
     for c in range(0, no_courses, 1):
         while True:
             try:
-                course_dict = {}
                 print(f"---Course {c}. ")
+                
+                course_dict = {}
                 course_name = str(input("Course Name: "))
                 course_id = int(input("Course ID: "))
+
                 if course_id <= 0 or course_name == "":
                     print("try again")
                 else:
@@ -110,11 +115,10 @@ def list_course(courses_list):
 
 # Select a course, input marks for a student in that courses
 def input_mark(students_list, courses_list, marks_list):
-    student_name = input("Student's name: ")
-
     student_exist = False
     course_exist = False
 
+    student_name = input("Student's name: ")
     # Check if the student exist 
     if len(students_list) == 0:
         print("Student does not exist!")
@@ -126,7 +130,6 @@ def input_mark(students_list, courses_list, marks_list):
                 student_exist = True
     
     course_name = input("Course's name: ")
-
     # Check if the course exist
     if len(courses_list) == 0:
         print("Course does not exist!")
@@ -184,10 +187,6 @@ def list_mark(marks_list):
 # This code will loop until terminated
 if __name__ == "__main__":
     print("------Student Mark management system------")
-
-    students_list = []
-    courses_list = []
-    marks_list = []
 
     while True:
         print("---Here are the things that you could do---")
