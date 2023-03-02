@@ -2,6 +2,10 @@
 # Objective: OOP-fy 1.student.mark.py
 # Students, Courses, StudentMarks should be an object
 
+students_list = []
+courses_list = []
+marks_list = []
+
 class Object:
     def __init__(self, name, id):
         self._name = name
@@ -227,10 +231,6 @@ def list_mark(marks_list):
 # This code will loop until terminated
 if __name__ == "__main__":
     print("------Student Mark management system------")
-
-    students_list = []
-    courses_list = []
-    marks_list = []
 
     while True:
         print("---Here are the things that you could do---")
