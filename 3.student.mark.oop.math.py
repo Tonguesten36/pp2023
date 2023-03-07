@@ -1,6 +1,6 @@
 
 # Objectives: 
-# • Use math module to round-down student scores to 1-digit decimal upon input, floor()
+# • Use math module to round-down student scores to 1-digit decimal upon input, floor() (done)
 # • Use numpy module and its array to
 #   • Add function to calculate average GPA for a given student
 #       • Weighted sum of credits and marks
@@ -86,6 +86,7 @@ class StudentMark:
          
 
 # Input a number of students in an class
+# TODO: Decorate the UI with "curses"
 def input_student(students_list):
     # Ask the user how many students would they like to add
     while True:
@@ -109,10 +110,11 @@ def input_student(students_list):
 
                 if student_id <= 0 or student_name == "" or student_dob == "":
                     print("try again")
+                    continue
                 else:
                     # Check if the student had already existed yet
                     for student_obj in students_list:
-                        if student_obj.get_id() == student_id:
+                        if student_obj._get_id() == student_id:
                             print("Student already exist!")
                             return
                     
@@ -126,14 +128,16 @@ def input_student(students_list):
                 print("Something went wrong, try again.")
 
 # List out all students in the class
+# TODO: Decorate the UI with "curses"
 def list_student(students_list):
     print("---List of students in the class---")
     counter = 1
     for student_obj in students_list:
-        print(f"Student {counter}. Name: {student_obj.get_name()}, ID: {student_obj.get_id()}, D.O.B: {student_obj.get_dob()}")
+        print(f"Student {counter}. Name: {student_obj._get_name()}, ID: {student_obj._get_id()}, D.O.B: {student_obj._get_dob()}")
         counter = counter + 1
 
 # Input a number of courses
+# TODO: Decorate the UI with "curses"
 def input_course(course_list):
     # Ask the user how many courses they would like to add
     while True:
@@ -158,7 +162,7 @@ def input_course(course_list):
                 else:
                     # Check if the course exist yet
                     for course_obj in course_list:
-                        if course_obj.get_name() == course_name or course_obj.get_id() == course_id:
+                        if course_obj._get_name() == course_name or course_obj._get_id() == course_id:
                             print("Course already exist!")
                             return
 
@@ -171,14 +175,16 @@ def input_course(course_list):
                 print("Something went wrong, try again.")
 
 # List out available courses
+# TODO: Decorate the UI with "curses"
 def list_course(courses_list):
     counter = 1
     print("---List of courses available---")
     for course_obj in courses_list:
-        print(f"Course {counter}. {course_obj.get_name()}, ID: {course_obj.get_id()}")
+        print(f"Course {counter}. {course_obj._get_name()}, ID: {course_obj._get_id()}")
         counter = counter + 1
 
 # Select a course, input marks for a student in that courses
+# TODO: Decorate the UI with "curses"
 def input_mark(students_list, courses_list, marks_list):
     student_id = int(input("Student's ID: "))
 
@@ -191,7 +197,7 @@ def input_mark(students_list, courses_list, marks_list):
         return
     else:
         for student_obj in students_list:
-            if student_obj.get_id() == student_id:
+            if student_obj._get_id() == student_id:
                 student_exist = True
 
     course_name = input("Course's name: ")
@@ -202,7 +208,7 @@ def input_mark(students_list, courses_list, marks_list):
         return
     else:
         for course_obj in courses_list:
-            if course_obj.get_name() == course_name:
+            if course_obj._get_name() == course_name:
                 course_exist = True
 
     # If student or course does not exist, then the function stops
@@ -220,6 +226,8 @@ def input_mark(students_list, courses_list, marks_list):
             student_mark = float(input("Input mark here: "))
             if student_mark < 0:
                 print("Mark must be non-negative")
+            elif student_mark > 10:
+                print("Mark is too big!")
             else:
                 break
         except ValueError:
@@ -232,18 +240,26 @@ def input_mark(students_list, courses_list, marks_list):
     marks_list.append(student_mark_obj)
 
 # List out all mark of a student
+# TODO: Decorate the UI with "curses"
 def list_mark(marks_list):
+    #list_mark_screen = curses.initscr()
+    #list_mark_screen.refresh()
     try:
         search_target = int(input("Enter the student ID: "))
-
-        for mark_obj in marks_list:
-            if mark_obj.get_student_id() == search_target:
-                print(f"Course: {mark_obj.get_course_name()}, Mark: {mark_obj.get_student_mark()}")
     except ValueError:
         print("Student ID should be an integer!")
 
-# TODO: Calculate average GPA of a given student
-#
+    counter = 0
+    for mark_obj in marks_list:
+        if mark_obj._get_student_id() == search_target:
+            #list_mark_screen.addstr(0, counter, f"Course: {mark_obj.get_course_name()}, Mark: {mark_obj.get_student_mark()}")
+            print(f"Course: {mark_obj._get_course_name()}, Mark: {mark_obj._get_student_mark()}")
+            counter = counter + 1
+
+    #curses.endwin()
+
+# Calculate average GPA of a given student (Done)
+# TODO: Decorate the UI with "curses"
 # PSEUDOCODE
 # step 1: the user type in student's id (remember to implement error handling)
 # step 2: calculate the average GPA of all marks associated with that Student ID
@@ -251,32 +267,62 @@ def list_mark(marks_list):
 #       2.2: iterate through the student_marks_list list
 #       2.3: for every matched student id in the list, append them into the np array
 #       2.4: get the marks in each student_mark object and begin calculate average gpa
-# step 3: return the average GPA, weighted sum of credits and marks 
+# step 3: return the average GPA 
 def average_gpa(student_marks_list):
+    # Ask the user for the student's ID
     try:
         student_id = int(input("Enter the student ID: "))
     except ValueError:
         print("Student ID should be an integer!")
 
-        # For every matched student id in the list, append them into the student_marks_list
-        student_marks_list = []
-        for student_mark_object in student_marks_list:
-            if student_mark_object._get_student_id() == student_id:
-                student_marks_list.append(student_mark_object._get_student_mark())
+    # Initialize the average gpa variable
+    avg_gpa = 0
 
-        # Create a new np array from student_marks_list list
-        mark_array = np.array(student_marks_list)
-        
-        
+    # Initialize the max gpa variable
+    # this variable exist to display the student's maximum gpa that they could achieve
+    max_gpa = 0
+
+    # For every matched student id in the list, append them into the temp_list
+    temp_list = []
+    for student_mark_object in student_marks_list:
+        if student_mark_object._get_student_id() == student_id:
+            temp_list.append(student_mark_object._get_student_mark())
+
+    # Create a new np array from temp_list list
+    mark_array = np.array(temp_list)
+
+    # Calculating the student's average GPA, as well as their possible max gpa
+    for mark in mark_array:
+        avg_gpa = avg_gpa + mark
+        max_gpa = max_gpa + 10
+    avg_gpa = avg_gpa / float(mark_array.size)
+    max_gpa = max_gpa / float(mark_array.size)
+
+    # Display the student's average gpa / max gpa they could achieve
+    print(f"Average GPA: {avg_gpa}/{max_gpa}")
+
 
 # Execute the code
 # This code will loop until terminated
 # TODO: Decorate the UI using the "curses" module
 if __name__ == "__main__":
+    # main_menu_screen = curses.initscr() 
     print("------Student Mark management system------")
 
-
     while True:
+        # main_menu_screen.refresh()
+        # main_menu_screen.addstr(0, 0,
+        # '''------Student Mark management system-------
+        # ---Here are the things that you could do---
+        # 1. Add new student(s)
+        # 2. Add new course(s)
+        # 3. Select a course and input mark for student
+        # 4. List out all students
+        # 5. List out all courses")
+        # 6. List out all students' mark for each courses
+        # 7. Calculate average GPA of a student
+        # 8. Exit''')
+        
         print("---Here are the things that you could do---")
         print("1. Add new student(s)")
         print("2. Add new course(s)")
@@ -284,10 +330,11 @@ if __name__ == "__main__":
         print("4. List out all students")
         print("5. List out all courses")
         print("6. List out all students' mark for each courses")
-        print("7. Exit")
-        
-        op = input("What do you want to do? (1-7): ")
+        print("7. Average GPA of a student")
+        print("8. Exit")
 
+        # curses.napms(3000)
+        op = input("What do you want to do? (1-8): ")
     
         # Use this code if you're using a Python version 3.10 or later
         match op:
@@ -304,8 +351,11 @@ if __name__ == "__main__":
             case "6":
                 list_mark(marks_list)
             case "7":
+                average_gpa(marks_list)
+            case "8":
                 exit()
             case _:
                 print("Invalid input")
 
         print("\n")
+        # curses.wrapper(main_menu_screen)
