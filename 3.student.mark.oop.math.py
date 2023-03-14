@@ -383,34 +383,6 @@ def sort_student(student_list, student_marks_list, courses_list):
 # Execute the code
 # This code will loop until terminated
 def main():
-    student_1 = Student("tung", "1", "1")
-    student_2 = Student("le", "2", "2")
-    student_3 = Student("lemao", "3", "3")
-
-    students_list.append(student_1)
-    students_list.append(student_2)
-    students_list.append(student_3)
-
-    course_1 = Course("math", "1c")
-    course_2 = Course("python", "2c")
-
-    courses_list.append(course_1)
-    courses_list.append(course_2)
-
-    student_1_mark_1 = StudentMark("1", "math", 9.45)
-    student_1_mark_2 = StudentMark("1", "python", 7.5)
-    student_2_mark_1 = StudentMark("2", "math", 10)
-    student_2_mark_2 = StudentMark("2", "python", 5)
-    student_3_mark_1 = StudentMark("3", "math", 8)
-    student_3_mark_2 = StudentMark("3", "python", 9)
-
-    marks_list.append(student_1_mark_1)
-    marks_list.append(student_1_mark_2)
-    marks_list.append(student_2_mark_1)
-    marks_list.append(student_2_mark_2)
-    marks_list.append(student_3_mark_1)
-    marks_list.append(student_3_mark_2)
-
     while True:      
         os.system('clear')
 
