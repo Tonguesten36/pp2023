@@ -1,4 +1,4 @@
-import os
+import subprocess
 import output as out
 import input_ as inp
 
@@ -11,7 +11,7 @@ marks_list = []
 # This code will loop until terminated
 def main():
     while True:
-        os.system('clear')
+        subprocess.run(["clear"])
 
         print("------Student Mark management system------")
         print("---Here are the things that you could do---")
