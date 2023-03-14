@@ -6,12 +6,17 @@
 #       • Weighted sum of credits and marks
 #   • Sort student list by GPA descending (done)
 # • Decorate your UI with curses module (I'll assume that we only need to use curses for output functions,
-#       but maybe I'll come back and implement them for input functions as well in the future)
+#       but maybe I'll come back and implement them for input functions as well in the future,
+#       also feedback regarding the UI is ok)
 # • Push your work to corresponding forked Github repository
 
 import math
 import numpy as np
-import curses # Still trying to figuring out how this works
+
+import curses
+import curses.textpad
+
+import os
 
 # Data
 students_list = []
@@ -89,6 +94,7 @@ class StudentMark:
          
 
 # Input a number of students in an class
+# TODO: Decorate the UI with "curses" (later)
 def input_student(students_list):
     # Ask the user how many students would they like to add
     while True:
@@ -129,16 +135,36 @@ def input_student(students_list):
                 print("Something went wrong, try again.")
 
 # List out all students in the class
-# TODO: Decorate the UI with "curses"
 def list_student(students_list):
-    print("---List of students in the class---")
+    # Initialize the screen
+    stdscr = curses.initscr()
+
+    # Temporarily erase the terminal
+    stdscr.erase()
+    stdscr.addstr(0, 20, "---<List of students in the class>---", curses.A_BOLD)
+
+    # List out all students
     counter = 1
+    line = 1
     for student_obj in students_list:
-        print(f"Student {counter}. Name: {student_obj._get_name()}, ID: {student_obj._get_id()}, D.O.B: {student_obj._get_dob()}")
+        stdscr.addstr(line + 1, 1, f"-- Student {counter}.")
+        stdscr.addstr(line + 2, 4, f"• Name: {student_obj._get_name()}")
+        stdscr.addstr(line + 3, 4, f"• ID: {student_obj._get_id()}")
+        stdscr.addstr(line + 4, 4, f"• D.O.B: {student_obj._get_dob()}")
+        line = line + 5
+
         counter = counter + 1
+    
+    # Refresh the screen so that the result show up in the terminal
+    stdscr.refresh()
+
+    # Restore the terminal its original state when user type a single key
+    stdscr.addstr(line, 0, "\nPress any key to continue...", curses.A_BOLD)
+    stdscr.getch()
+    curses.endwin()
 
 # Input a number of courses
-# TODO: Decorate the UI with "curses"
+# TODO: Decorate the UI with "curses" (later)
 def input_course(course_list):
     # Ask the user how many courses they would like to add
     while True:
@@ -171,16 +197,35 @@ def input_course(course_list):
                 break
 
 # List out available courses
-# TODO: Decorate the UI with "curses"
 def list_course(courses_list):
+    # Initialize the screen
+    stdscr = curses.initscr()
+
+    # Temporarily erase the terminal
+    stdscr.erase()
+    stdscr.addstr(0, 20, "---<List of courses available>---", curses.A_BOLD)
+
+    # List out all courses
     counter = 1
-    print("---List of courses available---")
+    line = 1
     for course_obj in courses_list:
-        print(f"Course {counter}. {course_obj._get_name()}, ID: {course_obj._get_id()}")
+        stdscr.addstr(line + 1, 1, f"-- Course {counter}.")
+        stdscr.addstr(line + 2, 4, f"• Name: {course_obj._get_name()}")
+        stdscr.addstr(line + 3, 4, f"• ID: {course_obj._get_id()}")
+        line = line + 4
+
         counter = counter + 1
+    
+    # Refresh the screen so that the result show up in the terminal
+    stdscr.refresh()
+
+    # Restore the terminal its original state when user type a single key
+    stdscr.addstr(line, 0, "\nPress any key to continue...", curses.A_BOLD)
+    stdscr.getch()
+    curses.endwin()
 
 # Select a course, input marks for a student in that courses
-# TODO: Decorate the UI with "curses"
+# TODO: Decorate the UI with "curses" (later)
 def input_mark(students_list, courses_list, marks_list):
     student_id = str(input("Student's ID: "))
 
@@ -236,30 +281,32 @@ def input_mark(students_list, courses_list, marks_list):
     marks_list.append(student_mark_obj)
 
 # List out all mark of a student
-# TODO: Decorate the UI with "curses"
-def list_mark(marks_list):    
+def list_mark(marks_list):  
     search_target = str(input("Enter the student ID: "))
+    stdscr = curses.initscr()
 
-    counter = 0
+    # Temporarily erase the terminal
+    stdscr.erase()
+    stdscr.addstr(0, 20, f"---<List of marks of student {search_target}>---", curses.A_BOLD)
+
+    # List out all courses
+    line = 1
     for mark_obj in marks_list:
         if mark_obj._get_student_id() == search_target:
-            print(f"Course: {mark_obj._get_course_name()}, Mark: {mark_obj._get_student_mark()}")
-            counter = counter + 1
-            
-    #curses.endwin()
+            stdscr.addstr(line + 1, 1, f"-- Course: {mark_obj._get_course_name()}")
+            stdscr.addstr(line + 2, 4, f"• Mark: {mark_obj._get_student_mark()}")
+            line = line + 3
+    
+    # Refresh the screen so that the result show up in the terminal
+    stdscr.refresh()
 
-# Calculate average GPA of a given student (Done)
-# TODO: Decorate the UI with "curses"
-# PSEUDOCODE
-# step 1: the user type in student's id
-# step 2: calculate the average GPA of the student
-#       2.1: create a new, empty np (numpy) array
-#       2.2: iterate through the student_marks_list list
-#       2.3: for every matched student id in the list, append them into the np array
-#       2.4: get the marks in each student_mark object and begin calculate average gpa
-# step 3: return the average GPA 
+    # Restore the terminal its original state when user type a single key
+    stdscr.addstr(line, 0, "\nPress any key to continue...", curses.A_BOLD)
+    stdscr.getch()
+    curses.endwin()
+
+# Calculate average GPA of a given student
 def average_gpa(student_id, student_marks_list, courses_list, display_mode=False):
-
     # Initialize the average gpa variable
     avg_gpa = 0
 
@@ -276,50 +323,98 @@ def average_gpa(student_id, student_marks_list, courses_list, display_mode=False
     # Create a new np array from temp_list list
     mark_array = np.array(temp_list)
 
-    # Calculating the student's average GPA, as well as their possible max gpa
+    # Calculating the student's average GPA
     for mark in mark_array:
         avg_gpa = avg_gpa + mark
     avg_gpa = avg_gpa / float(len(courses_list))
-
+    # as well as their possible max gpa
     for course in courses_list:
         max_gpa = max_gpa + 10
     max_gpa = max_gpa / float(len(courses_list))
 
     # Display the student's average gpa / max gpa they could achieve
-    # if display_mode is set to true
+    # if display_mode == true
     if display_mode == True:
-        print(f"Average GPA: {avg_gpa}/{max_gpa}")
-    else: # Simply return the avg_gpa if display_mode is set to false
+        stdscr = curses.initscr()
+        stdscr.erase()
+
+        # Create a textbox containing the student's average GPA
+        curses.textpad.rectangle(stdscr, 2, 2, 5, 60)
+        stdscr.addstr(3, 5, f"Average GPA of student with the ID {student_id} is: {avg_gpa}/{max_gpa}")
+        stdscr.refresh()
+        
+        # Restore the terminal's original state after the user press a key
+        stdscr.addstr(12, 0, "\nPress any key to continue...", curses.A_BOLD)
+        stdscr.getch()
+        curses.endwin()
+    else: # Simply return the avg_gpa variable if display_mode == false
         return avg_gpa
 
-# TODO: Sort student by descending GPA
-# step 1: initiate an empty numpy array
-# step 2: for every student in the student_marks_list list, do:
-#       2.1. calculate a student's gpa using average_gpa()
-#       2.2. append the student's id and their average_gpa into a list
-# step 3: sort by descending GPA (Display the student's name associated with the gpas)
+# Sort student by descending GPA
 def sort_student(student_list, student_marks_list, courses_list):
-    
+    # Initialize a new screen
+    stdscr = curses.initscr()
+    stdscr.erase()
+
     # For every student in the student_list list, append (student_id, average_gpa of said student) into temp_gpa_list list
     temp_gpa_list = []
     for student in student_list:
         temp_gpa_list.append((student._get_id(),average_gpa(student._get_id(), student_marks_list, courses_list, False)))
     
-    # Sort the temp_gpa_list list according to GPA by descending order
+    # Create a new array from temp_gpa_list
     gpa_array = np.array(temp_gpa_list)
-    gpa_array = gpa_array[np.argsort(gpa_array[:, 1])]
+    # Sort the temp_gpa_list list according to GPA by descending order
+    gpa_array = reversed(gpa_array[np.argsort(gpa_array[:, 1])])
 
     # Display the result
-    print(f"Student list sorted by descending GPA (Format: Student ID, Average GPA): \n{gpa_array[::-1]}")
+    stdscr.addstr(1, 20, "---<List of student by descending GPA>---", curses.A_BOLD)
+    line = 4
+    for gpa in gpa_array:
+        stdscr.addstr(line, 4, f"• Student ID: {gpa[0]}, GPA: {gpa[1]}")
+        line += 1
+    stdscr.refresh()
+
+    # Restore the terminal's original state after the user press a key
+    stdscr.addstr(line, 0, "\nPress any key to continue...", curses.A_BOLD)
+    stdscr.getch()
+    curses.endwin()
 
 
 # Execute the code
 # This code will loop until terminated
-# TODO: Decorate the UI using the "curses" module
-if __name__ == "__main__":
-    print("------Student Mark management system------")
-    
-    while True:        
+def main():
+    student_1 = Student("tung", "1", "1")
+    student_2 = Student("le", "2", "2")
+    student_3 = Student("lemao", "3", "3")
+
+    students_list.append(student_1)
+    students_list.append(student_2)
+    students_list.append(student_3)
+
+    course_1 = Course("math", "1c")
+    course_2 = Course("python", "2c")
+
+    courses_list.append(course_1)
+    courses_list.append(course_2)
+
+    student_1_mark_1 = StudentMark("1", "math", 9.45)
+    student_1_mark_2 = StudentMark("1", "python", 7.5)
+    student_2_mark_1 = StudentMark("2", "math", 10)
+    student_2_mark_2 = StudentMark("2", "python", 5)
+    student_3_mark_1 = StudentMark("3", "math", 8)
+    student_3_mark_2 = StudentMark("3", "python", 9)
+
+    marks_list.append(student_1_mark_1)
+    marks_list.append(student_1_mark_2)
+    marks_list.append(student_2_mark_1)
+    marks_list.append(student_2_mark_2)
+    marks_list.append(student_3_mark_1)
+    marks_list.append(student_3_mark_2)
+
+    while True:      
+        os.system('clear')
+
+        print("------Student Mark management system------")
         print("---Here are the things that you could do---")
         print("1. Add new student(s)")
         print("2. Add new course(s)")
@@ -358,4 +453,5 @@ if __name__ == "__main__":
             case _:
                 print("Invalid input")
 
-        print("\n")
+main()
+#curses.wrapper(main)
