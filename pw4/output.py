@@ -69,13 +69,13 @@ def list_mark(marks_list):
 
     # Temporarily erase the terminal
     stdscr.erase()
-    stdscr.addstr(0, 20, f"---<List of marks of student {search_target}>---", curses.A_BOLD)
+    stdscr.addstr(0, 20, f"---<List of marks of student ID {search_target}>---", curses.A_BOLD)
 
     # List out all courses
     line = 1
     for mark_obj in marks_list:
         if mark_obj._get_student_id() == search_target:
-            stdscr.addstr(line + 1, 1, f"-- Course: {mark_obj._get_course_name()}")
+            stdscr.addstr(line + 1, 1, f"-- Course ID: {mark_obj._get_course_id()}")
             stdscr.addstr(line + 2, 4, f"• Mark: {mark_obj._get_student_mark()}")
             line = line + 3
     

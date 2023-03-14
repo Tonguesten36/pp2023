@@ -11,4 +11,4 @@ class Course(Object):
         return super().__str__()
 
     def __lt__(self, other_course):
-        return (self._name == other_course._name) or (self._id == other_course._id)
+        return self._id == other_course._id

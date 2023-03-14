@@ -93,7 +93,7 @@ def input_mark(students_list, courses_list, marks_list):
             if student_obj._get_id() == student_id:
                 student_exist = True
 
-    course_name = str(input("Course's name: "))
+    course_id = str(input("Course's ID: "))
 
     # Check if the course exist
     if len(courses_list) == 0:
@@ -101,7 +101,7 @@ def input_mark(students_list, courses_list, marks_list):
         return
     else:
         for course_obj in courses_list:
-            if course_obj._get_name() == course_name:
+            if course_obj._get_id() == course_id:
                 course_exist = True
 
     # If student or course does not exist, then the function stops
@@ -127,7 +127,7 @@ def input_mark(students_list, courses_list, marks_list):
             print("Mark must be a number!")
     
     # The student mark will be an object
-    student_mark_obj = domains.StudentMark(student_id, course_name, student_mark)
+    student_mark_obj = domains.StudentMark(student_id, course_id, student_mark)
 
     # Add the mark's info into the list
     marks_list.append(student_mark_obj)
