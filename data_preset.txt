@@ -1,0 +1,33 @@
+
+# Data preset.
+# Paste in everything below this line on main.py when testing
+# Feel free to add some more if you wish
+
+import domains.student as student, domains.course as course, domains.student_mark as marks
+student_1 = student.Student("tung", "1s", "10/06")
+student_2 = student.Student("le", "2s", "20/03")
+student_3 = student.Student("lemao", "3s", "03/10")
+
+students_list.append(student_1)
+students_list.append(student_2)
+students_list.append(student_3)
+
+course_1 = course.Course("math", "1c")
+course_2 = course.Course("python", "2c")
+
+courses_list.append(course_1)
+courses_list.append(course_2)
+
+student_1_mark_1 = marks.StudentMark("1", "math", 9.45)
+student_1_mark_2 = marks.StudentMark("1", "python", 7.5)
+student_2_mark_1 = marks.StudentMark("2", "math", 10)
+student_2_mark_2 = marks.StudentMark("2", "python", 5)
+student_3_mark_1 = marks.StudentMark("3", "math", 8)
+student_3_mark_2 = marks.StudentMark("3", "python", 9)
+
+marks_list.append(student_1_mark_1)
+marks_list.append(student_1_mark_2)
+marks_list.append(student_2_mark_1)
+marks_list.append(student_2_mark_2)
+marks_list.append(student_3_mark_1)
+marks_list.append(student_3_mark_2)
