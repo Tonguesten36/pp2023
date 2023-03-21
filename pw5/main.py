@@ -58,11 +58,6 @@ def combine_all_to_tarfile(file_names):
 
 # Extract all data from students.tar.gz
 def extract_tarfile(file_names):
-    # Clean up any .txt files lingering in the directory
-    for file in file_names:
-        if path.exists(file):
-            os.remove(file)
-
     # Check if the .tar.gz file exist
     if path.exists("students.tar.gz"):
         try:
