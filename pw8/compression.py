@@ -17,7 +17,6 @@ def __init__():
 # Step4: Exit
 # Step5: When started again, repeat Step1
 
-# TODO: Upgrade the persistence feature of your system to use pickle in background thread, still with compression
 
 def serialize_objects(database, save_file):
     """
